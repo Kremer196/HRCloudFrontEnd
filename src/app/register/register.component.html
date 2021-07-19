@@ -1,0 +1,27 @@
+
+<head>
+    <link rel="stylesheet" href="register.component.css">
+</head>
+
+<body ng-cloak> 
+    <form (submit)="registerUser($event)" class="form-container">
+        <label class="form-label">First name:</label>
+        <input class="form-input" required type="text" id="first" name="first"> <br>
+        <label class="form-label">Last name:</label>
+        <input class="form-input" required type="text" id="last" name="last"> <br>
+        <label class="form-label">Birth date:</label>
+        <input class="form-input" required type="date" id="birth" name="birth"> <br>
+        <label class="form-label">Email: </label>
+        <input class="form-input" required id="email" type="email" name="email"> <br>
+        <label class="form-label">Password: </label>
+        <input class="form-input" required id="password" type="password" name="password" minlength="8"> <br>
+        <label class="form-label">Confirm password: </label>
+        <input class="form-input" required id="confirm" type="password" name="confirm"> <br>
+        <input class="form-input submit" type="submit" value="Register">
+       
+        <div *ngFor="let error of errors">
+            <span class="errors">{{ error }}</span>
+         </div>
+    </form>
+   
+</body>

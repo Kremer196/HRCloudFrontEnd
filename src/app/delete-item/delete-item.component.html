@@ -1,0 +1,16 @@
+<head>
+    <link rel="stylesheet" href="delete-item.component.css">
+</head>
+
+<body>
+    <div class="title">Delete item</div>
+    <div class="form-container">
+        <form (submit)="deleteItem($event)" class="form">
+            <label> Item:</label>
+            <select id="item">
+                <option *ngFor="let item of items">{{ item.itemName }}</option>
+            </select> <br>
+            <input class="submit" type="submit" value="Confirm">
+        </form>
+    </div>
+</body>

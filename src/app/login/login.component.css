@@ -1,0 +1,53 @@
+.form-container {
+    border: 2px solid cadetblue;
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background-color: lightgray;
+}
+
+.form-label {
+    display: inline-block;
+    width: 200px;
+    font-size: 2rem;
+    margin: 20px;
+    color: chocolate;
+}
+
+.form-input {
+    font-size: 2rem;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.submit {
+    background: cadetblue;
+    color: lightgray;
+}
+
+.errors {
+    margin: 20px;
+    font-size: 1.3rem;
+    color: red;
+}
+
+.register-div {
+    margin: 20px;
+    font-size: 1.5rem;
+   
+}
+
+.register {
+    display: inline-block;
+    color: cadetblue;
+    text-decoration: none;
+}
+
+.register:hover {
+    color: white;
+    text-decoration: underline;
+}

@@ -1,0 +1,130 @@
+header {
+    
+    height: 200px;
+    background-color: cadetblue;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+      
+}
+
+.changeable-links {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+.header-link {
+    width: min-content;
+    text-align: center;
+    display: block;
+    font-size: 2rem;
+    text-decoration: none;
+    color: coral;
+}
+
+.header-link:hover {
+    color: chocolate;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.select-list {
+    font-size: 1.5rem;
+}
+
+
+.image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.items-list {
+    position: absolute;
+    z-index: -1;
+    width: min-content;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.caption {
+    font-size: 1.5rem;
+    text-align: center;
+    color: cadetblue;
+    text-decoration: none;
+}
+
+.caption:hover {
+    color: coral;
+}
+
+
+
+.user-logout {
+    text-align: center;
+    margin: 20px;
+}
+
+
+.btn {
+    font-size: 1.5rem;
+    background-color: cadetblue;
+    color: aliceblue;
+    border: 2px solid chocolate;
+    border-radius: 3px;
+}
+
+.item-manage-container {
+    margin-top: 10px;
+    display: grid;
+    justify-content: center;
+    border-radius: 5px;
+    
+}
+
+.class {
+    width: 600px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    text-align: center;
+    
+}
+
+.price-range-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.search {
+    font-size: 1.5rem;
+   
+}
+.label {
+    font-size: 1.5rem;
+    margin-right: 5px;
+}
+
+.price {
+    font-size: 1.5rem;
+    margin-right: 5px;
+}

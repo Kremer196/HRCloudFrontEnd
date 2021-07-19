@@ -1,0 +1,48 @@
+.title {
+    font-size: 4rem;
+    margin-top: 40px;
+    margin-bottom: 50px;
+    text-align: center;
+    color: cadetblue;
+    border: 3px solid cadetblue;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+}
+
+label {
+    display: inline-block;
+    width: 200px;
+    font-size: 2rem;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.form {
+    font-size: 2rem;
+    border: 3px solid cadetblue;
+    background-color: lightgray;
+}
+
+input {
+    font-size: 2rem;
+    margin-right: 20px;
+}
+
+select {
+    font-size: 2rem;
+}
+
+.submit {
+   margin-left: 20px;
+   margin-bottom: 20px;
+   background-color: cadetblue;
+   color: aliceblue;
+}
+
+#item {
+    margin-right: 20px;
+}

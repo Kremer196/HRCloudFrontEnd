@@ -1,0 +1,29 @@
+<head>
+    <link rel="stylesheet" href="cart.component.css">
+</head>
+
+<body ng-cloak>
+    <div class="container">
+        <div class="item-container" *ngFor="let item of cartItems">
+            <img class="image" src="{{ item.itemImageURL }}">
+            <span class="property" id="item"> {{ item.itemName }} </span>
+            <span id="price" class="property"> {{ item.itemPrice}} kn </span>
+            <div class="plus-minus-container" data-id="{{ item.itemID }}">
+                <input id="plus" (click)="plusFunction(item.itemID)" class="btn" type="button" value="+">
+                <input class="field" readonly id="count" type="text" size=5 value="{{ item.itemCount }}">
+                <input id="minus" (click)="minusFunction(item.itemID)" class="btn" type="button" value="-">
+            </div>
+        </div>
+        <div class="price-container">
+            <span  class="total">TOTAL PRICE:</span>  <span class="total-price"> {{ totalPrice }} kn</span> <br>
+            <input *ngIf="notEmptyFunction()" (click)="validatePurchase($event)" class="confirm" type="button" value="Confirm purchase">
+        </div>
+        <div class="errors" *ngFor="let error of errors">
+            {{ error }}
+        </div>
+    </div>
+   
+    
+</body>
+
+

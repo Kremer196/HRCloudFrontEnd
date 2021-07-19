@@ -1,0 +1,31 @@
+<head>
+    <link rel="stylesheet" href="user-management.component.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="title">
+            User Management
+        </div>
+        <div>
+            <form (submit)="saveChanges($event)">
+                <div *ngFor="let user of users">
+                    <div id="{{ user.userID }}" class="user-container">
+                        <span class="name">{{ user.firstName }} {{ user.lastName }} </span>
+                        <select class="role">
+                            <option>
+                                {{user.typeString}}
+                            </option>
+                            <option *ngFor="let role of user.otherRoles">
+                                {{ role }}
+                            </option>
+                                
+                         </select>
+                    </div>    
+                </div>
+                <input type="submit" class="submit" value="Save Changes">
+            </form>
+        </div>
+    </div>
+</body>

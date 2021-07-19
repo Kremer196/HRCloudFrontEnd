@@ -1,0 +1,27 @@
+
+<head>
+    <link rel="stylesheet" href="update-item.component.css">
+</head>
+
+<body>
+    <div class="title">Update item</div>
+    <div class="form-container">
+        <form (submit)="updateItem($event)" class="form">
+            <label> Item:</label>
+            <select id="item">
+                <option *ngFor="let item of items">{{ item.itemName }}</option>
+            </select> <br>
+            <label>New name:</label>
+            <input type="text" id="name"> <br>
+            <label> Category:</label>
+            <select id="category">
+                <option *ngFor="let category of categories">{{ category.categoryName }}</option>
+            </select> <br>
+            <label>Price:</label>
+            <input type="text" id="price" size="5"> kn <br>
+            <label>Image URL:</label>
+            <input type="text" id="image" size="30"> <br>
+            <input class="submit" type="submit" value="Confirm">
+        </form>
+    </div>
+</body>

@@ -1,0 +1,43 @@
+<head>
+    <link rel="stylesheet" href="user.component.css">
+</head>
+
+<body ng-cloak>
+    <div class="container">
+        <div class="user-info-container">
+            <div ><span class="user-info">First name: </span>  <span class="user-info-value"> {{ user.firstName}} </span></div>
+            <div><span class="user-info">Last name: </span> <span class="user-info-value"> {{ user.lastName}} </span></div>
+            <div><span class="user-info">Email: </span> <span class="user-info-value"> {{ user.email}} </span></div>
+            <div><span  class="user-info">Birth date: </span><span class="user-info-value"> {{ user.birthDate}} </span></div>
+        </div>
+
+        <div *ngIf="checkIfAdmin()" class="manage-users-container">
+            <a href="/user/manage"><input class="manage-btn" type="button" value="Manage Users"></a>
+        </div>
+
+        <div class="user-orders-container">
+            <div class="orders-title">
+                Previous orders:
+            </div>
+                <div>
+                    <div class="types">
+                        <div>Item</div>
+                        <div>Price (per item)</div>
+                        <div>Quantity</div>
+                        <div>Date </div>
+                    </div>
+                    <div class="orders" *ngFor="let order of orders">
+                        <div>{{ order[0] }}</div>
+                        <div>{{ order[1] }}</div>
+                        <div>{{ order[2] }}</div>
+                        <div>{{order[3]}} </div>
+                    </div>
+                </div>
+                
+                
+            
+        </div>
+    </div>
+
+    
+</body>

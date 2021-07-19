@@ -1,0 +1,18 @@
+<head>
+    <link rel="stylesheet" href="update-category.component.css">
+</head>
+
+<body>
+    <div class="title">Update category</div>
+    <div class="form-container">
+        <form (submit)="updateCategory($event)" class="form">
+            <label> Category:</label>
+            <select id="category">
+                <option *ngFor="let category of categories">{{ category.categoryName }}</option>
+            </select> <br>
+            <label>New name:</label>
+            <input type="text" id="name"> <br>
+            <input type="submit" class="submit" value="Confirm">
+        </form>
+    </div>
+</body>

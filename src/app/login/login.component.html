@@ -1,0 +1,20 @@
+<head>
+    <link rel="stylesheet" href="login.component.css">
+</head>
+
+<body ng-cloak>
+    <form (submit)="loginUser($event)" class="form-container" action="/login">
+        <label class="form-label">Email: </label>
+        <input class="form-input" required id="email" type="email" name="email"> <br>
+        <label class="form-label">Password: </label>
+        <input class="form-input" required id="password" type="password" name="password"> <br>
+        <input class="form-input submit" type="submit" value="Login">
+        <div class="register-div">
+            <a class="register" href="/register">Register</a>
+        </div>
+        <div *ngFor="let error of errors">
+           <span class="errors">{{ error }}</span>
+        </div>
+    </form>
+   
+</body>
