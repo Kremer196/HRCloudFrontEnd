@@ -9,9 +9,9 @@
             <span class="property" id="item"> {{ item.itemName }} </span>
             <span id="price" class="property"> {{ item.itemPrice}} kn </span>
             <div class="plus-minus-container" data-id="{{ item.itemID }}">
-                <input id="plus" (click)="plusFunction(item.itemID)" class="btn" type="button" value="+">
+                <input id="plus" (click)="plusFunction(item.itemID, $event)" class="btn" type="button" value="+">
                 <input class="field" readonly id="count" type="text" size=5 value="{{ item.itemCount }}">
-                <input id="minus" (click)="minusFunction(item.itemID)" class="btn" type="button" value="-">
+                <input id="minus" (click)="minusFunction(item.itemID, $event)" class="btn" type="button" value="-">
             </div>
         </div>
         <div class="price-container">

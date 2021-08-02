@@ -13,25 +13,92 @@ export class ItemComponent implements OnInit {
   item:any;
   categories:any;
   addBtn:any
+  user:any;
+
+  constructor(private http: HttpClient) { }
 
   
   // adding itemId to localStorage
-  addToCart() {
-  const itemToAdd = document.getElementById('id')?.textContent;
-  if(itemToAdd !== null && itemToAdd !== undefined) {           
-    let currentItemCount = localStorage.getItem(itemToAdd.trim());
-    if(currentItemCount == null) {
-      localStorage.setItem(itemToAdd.trim(), JSON.stringify(1));
-    } else {
-      let newItemCount = parseInt(currentItemCount) + 1;
-      localStorage.setItem(itemToAdd.trim(), JSON.stringify(newItemCount));
-    }
+  addToCart(event:any) {
+  
+  event.preventDefault();
+  const loggedIn = localStorage.getItem('loggedIn');
+  const itemToAdd = document.getElementById('id')?.textContent?.trim();
+  if(itemToAdd !== null && itemToAdd !== undefined) {     
+    if(loggedIn !== null) {
+      let oldCart = this.user.cart;
+      console.log(oldCart);
+      let oldItem = false;
+      if(oldCart != "") {
+        let oldCartArray = oldCart.split("#");
+        let index = 0;
+        let itemId = "";
+        let newCount = "";
+        for(let i = 0; i < oldCartArray.length-1; i++) {
+          let oldCartItemArray = oldCartArray[i].split("$");
+          if(oldCartItemArray[0] == itemToAdd) {
+            oldItem = true;
+            oldCartItemArray[1] = Number(oldCartItemArray[1]) + 1;
+            itemId = oldCartItemArray[0];
+            newCount = oldCartItemArray[1];
+            break;
+          }
+          index++;
+        }
+        oldCartArray[index] = itemId + "$" + newCount;
+        console.log(oldCartArray); 
+    
+        let updatedCart = oldCartArray.join("#");
+        this.http.put('http://localhost:62044/api/Users/' + loggedIn, {
+          userID: loggedIn,
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          dateOfBirth: this.user.dateOfBirth,
+          email: this.user.email, 
+          password: this.user.password,
+          userType: this.user.userType,
+          orders: this.user.orders,
+          cart: updatedCart
+        }).subscribe();
+       
+        if(!oldItem) {
+          let newCart = (oldCart + itemToAdd + "$" + 1 + "#").trim();
+          this.http.put('http://localhost:62044/api/Users/' + loggedIn, {
+              userID: loggedIn,
+              firstName: this.user.firstName,
+              lastName: this.user.lastName,
+              dateOfBirth: this.user.dateOfBirth,
+              email: this.user.email, 
+              password: this.user.password,
+              userType: this.user.userType,
+              orders: this.user.orders,
+              cart: newCart
+          }).subscribe();
+        }
+      } else { 
+          let newCart = (oldCart + itemToAdd + "$" + 1 + "#").trim(); 
+          this.http.put('http://localhost:62044/api/Users/' + loggedIn, {
+            userID: loggedIn,
+            firstName: this.user.firstName,
+            lastName: this.user.lastName,
+            dateOfBirth: this.user.dateOfBirth,
+            email: this.user.email, 
+            password: this.user.password,
+            userType: this.user.userType,
+            orders: this.user.orders,
+            cart: newCart
+          }).subscribe();
+      }
+    
+  }  else {
+    window.location.href = 'http://localhost:4200/login';
+  }   
+   
   }
  
 }
 
-  constructor(private http: HttpClient) { }
-
+ 
   ngOnInit(): void {
     this.id = window.location.href.split('/')[window.location.href.split('/').length-1]; // getting itemId through page url
     this.http.get('http://localhost:62044/api/Categories').subscribe(data => {
@@ -46,9 +113,18 @@ export class ItemComponent implements OnInit {
         }
       });
     })
+
+    const loggedIn = localStorage.getItem('loggedIn');
+    if(loggedIn !== null) {
+      this.http.get('http://localhost:62044/api/Users/' + loggedIn).subscribe((data:any) => {
+        this.user = data;
+      //  console.log(this.user);
+      })
+    }
+    
    
-    this.addBtn = document.getElementById('addBtn');
-    this.addBtn.addEventListener('click', this.addToCart);
+    
+   
 
   }
 

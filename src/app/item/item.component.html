@@ -23,7 +23,7 @@
             <div class="property-div">
                 <span class="label">Price:</span> <span class="property-value"> {{ item.itemPrice }} kn</span>
             </div>
-            <input id="addBtn" type="button" class="add-cart"  value="Add to cart">
+            <input id="addBtn" type="button" (click)="addToCart($event)" class="add-cart"  value="Add to cart">
         </div>
     </div>
 </div>

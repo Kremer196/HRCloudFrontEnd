@@ -25,6 +25,9 @@ export class AppComponent implements OnInit {
   minPrice:any;
   maxPrice:any;
   category:any;
+  constructor(private http: HttpClient, public route: Router) {
+    
+  }
 
 
 
@@ -63,9 +66,11 @@ export class AppComponent implements OnInit {
 
 
   //logout user, delete cart
-  logout = function() {
+  logout() {
 
     let keysToRemove = []
+
+    let userID = localStorage.getItem('loggedIn');
      
     for(let i = 0; i < localStorage.length; i++) {
 
@@ -79,6 +84,23 @@ export class AppComponent implements OnInit {
     for(let i = 0; i <keysToRemove.length; i++) {
       localStorage.removeItem(keysToRemove[i]);
     } 
+
+    this.http.get('http://localhost:62044/api/Users/' + userID).subscribe((data:any) => {
+      let user = data;
+
+      this.http.put('http://localhost:62044/api/Users/' + userID, {
+        userID: userID,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        dateOfBirth: user.dateOfBirth,
+        email: user.email,
+        password: user.password,
+        userType: user.userType,
+        orders: user.orders,
+        cart: ""
+      }).subscribe(data => window.location.href = 'http://localhost:4200/');
+    })
+    
     
   } 
 
@@ -105,9 +127,7 @@ export class AppComponent implements OnInit {
 
   
   
-  constructor(private http: HttpClient, public route: Router) {
-    
-  }
+ 
 
 
   ngOnInit(): void {
