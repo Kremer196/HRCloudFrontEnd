@@ -38,15 +38,25 @@ export class UserComponent implements OnInit {
       let email = data.email;
       this.user = new UserModel(userID, firstName, lastName, birthDate, email);
 
-      let ordersTemp = [];
-      ordersTemp = data.orders.split("#");    //getting items in array
-    
-      
+      this.http.get('http://localhost:62044/api/Orders/' + userID + '/list').subscribe((data:any) => {
+        let orderedItems = data;
 
-      for(let i = 0; i < ordersTemp.length; i++) {
-        this.orders.push(ordersTemp[i].split(','));
-      }
-      
+        for(let item of orderedItems) {
+          this.http.get('http://localhost:62044/api/Items/' + item.itemID).subscribe((data:any) => {
+            let itemO = data;
+
+            let order = []
+
+            order.push(itemO.itemName);
+            order.push(itemO.itemPrice);
+            order.push(item.quantity);
+            order.push(item.dateOfPurchase.split("T")[0]);
+
+            this.orders.push(order);
+
+          })
+        }
+      })
     })
   }
 

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 
+
 @Component({
   selector: 'app-item',
   templateUrl: './item.component.html',
@@ -26,69 +27,78 @@ export class ItemComponent implements OnInit {
   const itemToAdd = document.getElementById('id')?.textContent?.trim();
   if(itemToAdd !== null && itemToAdd !== undefined) {     
     if(loggedIn !== null) {
-      let oldCart = this.user.cart;
-      console.log(oldCart);
-      let oldItem = false;
-      if(oldCart != "") {
-        let oldCartArray = oldCart.split("#");
-        let index = 0;
-        let itemId = "";
-        let newCount = "";
-        for(let i = 0; i < oldCartArray.length-1; i++) {
-          let oldCartItemArray = oldCartArray[i].split("$");
-          if(oldCartItemArray[0] == itemToAdd) {
-            oldItem = true;
-            oldCartItemArray[1] = Number(oldCartItemArray[1]) + 1;
-            itemId = oldCartItemArray[0];
-            newCount = oldCartItemArray[1];
-            break;
+      let empty = false;
+      let cart = this.http.get('http://localhost:62044/api/Carts/' + loggedIn + '/list');
+      cart.toPromise().then(res => {
+        cart.subscribe((data:any) => {
+          if(data.length == 0) {
+            empty = true;
           }
-          index++;
-        }
-        oldCartArray[index] = itemId + "$" + newCount;
-        console.log(oldCartArray); 
-    
-        let updatedCart = oldCartArray.join("#");
-        this.http.put('http://localhost:62044/api/Users/' + loggedIn, {
-          userID: loggedIn,
-          firstName: this.user.firstName,
-          lastName: this.user.lastName,
-          dateOfBirth: this.user.dateOfBirth,
-          email: this.user.email, 
-          password: this.user.password,
-          userType: this.user.userType,
-          orders: this.user.orders,
-          cart: updatedCart
-        }).subscribe();
-       
-        if(!oldItem) {
-          let newCart = (oldCart + itemToAdd + "$" + 1 + "#").trim();
-          this.http.put('http://localhost:62044/api/Users/' + loggedIn, {
+          let oldItem = false;
+          let userCart = data;
+          for(let item of userCart) {
+            if(item.itemID == Number(itemToAdd)) {
+              oldItem = true;
+              this.http.put('http://localhost:62044/api/Carts/' + loggedIn + '/' + itemToAdd + '/plus', {
+                userID: loggedIn,
+                cartItems: [{itemID: Number(itemToAdd)}]
+              }).subscribe(data => console.log("putted"));
+              break;
+            }
+          }
+
+        
+          let postCartItem = this.http.post('http://localhost:62044/api/CartItems', {
+            itemID: itemToAdd
+          });
+          
+          postCartItem.toPromise()
+            .then(res => {
+              postCartItem.subscribe(data => console.log("posted cartitem"));
+            })
+            .catch(err => {
+              console.log("caught");
+            });
+         
+        
+         
+         if (!oldItem) {
+            console.log("new");
+            let putCartItem =  this.http.put('http://localhost:62044/api/Carts/' + loggedIn, {
               userID: loggedIn,
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
-              dateOfBirth: this.user.dateOfBirth,
-              email: this.user.email, 
-              password: this.user.password,
-              userType: this.user.userType,
-              orders: this.user.orders,
-              cart: newCart
-          }).subscribe();
-        }
-      } else { 
-          let newCart = (oldCart + itemToAdd + "$" + 1 + "#").trim(); 
-          this.http.put('http://localhost:62044/api/Users/' + loggedIn, {
-            userID: loggedIn,
-            firstName: this.user.firstName,
-            lastName: this.user.lastName,
-            dateOfBirth: this.user.dateOfBirth,
-            email: this.user.email, 
-            password: this.user.password,
-            userType: this.user.userType,
-            orders: this.user.orders,
-            cart: newCart
-          }).subscribe();
-      }
+              cartItems: [{itemID: Number(itemToAdd), quantity: 1}]
+            });
+            putCartItem.toPromise()
+              .then(res => {
+                putCartItem.subscribe(data => console.log("putted new"));
+              })
+              .catch(err => {
+                this.http.delete('http://localhost:62044/api/CartItems/' + itemToAdd).subscribe(data => {
+                  putCartItem.subscribe(data => console.log("putted after deletion"));
+                })
+              })
+            
+          }
+        
+        })
+      }).catch(err => {
+        let postCartItem = this.http.post('http://localhost:62044/api/CartItems', {
+            itemID: itemToAdd
+          });
+
+          postCartItem.toPromise()
+          .then(res => {
+            postCartItem.subscribe(data => console.log("posted cartitem"));
+          })
+          .catch(err => {
+
+          });
+        
+        this.http.post('http://localhost:62044/api/Carts', {
+          userID: loggedIn 
+
+        }).subscribe(data => console.log("posted"));
+      })
     
   }  else {
     window.location.href = 'http://localhost:4200/login';
@@ -131,3 +141,4 @@ export class ItemComponent implements OnInit {
  
 
 }
+ 

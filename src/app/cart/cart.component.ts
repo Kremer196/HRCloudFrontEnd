@@ -36,52 +36,22 @@ export class CartComponent implements OnInit {
       if(idToCompare !== null && idToCompare !== undefined) {
         if(parseInt(idToCompare) === id) {
           let field = (<HTMLInputElement>key.querySelector('.field'));
-         if(field !== null && field !== undefined) {
+          if(field !== null && field !== undefined) {
            let price = (<HTMLElement>key.querySelector('#price')).textContent?.split(" ")[1];
            console.log(price);
            if(price !== undefined) {
               let a = "" + (parseInt(field.value) + 1)
               this.totalPrice += parseInt(price); // updating total price
               field.value = a;
-              //localStorage.removeItem(JSON.parse(JSON.stringify(id)));
-              //localStorage.setItem(JSON.parse(JSON.stringify(id)), a);
-              this.http.get('http://localhost:62044/api/Users/' + this.user.userID).subscribe((data:any) => {
-              let oldCart = data.cart;
-              console.log(oldCart);
-              if(oldCart != "") {
-                let oldCartArray = oldCart.split("#");
-                let index = 0;
-                let itemId = "";
-                let newCount = "";
-                for(let i = 0; i < oldCartArray.length-1; i++) {
-                  let oldCartItemArray = oldCartArray[i].split("$");
-                  if(Number(oldCartItemArray[0]) == id) {
-                    oldCartItemArray[1] = Number(oldCartItemArray[1]) + 1;
-                    itemId = oldCartItemArray[0];
-                    newCount = oldCartItemArray[1];
-                    break;
-                  }
-                  index++;
-                }
-                oldCartArray[index] = itemId + "$" + newCount;
-                console.log(oldCartArray); 
-            
-                let updatedCart = oldCartArray.join("#");
-                this.http.put('http://localhost:62044/api/Users/' + this.user.userID, {
-                  userID: this.user.userID,
-                  firstName: this.user.firstName,
-                  lastName: this.user.lastName,
-                  dateOfBirth: this.user.dateOfBirth,
-                  email: this.user.email, 
-                  password: this.user.password,
-                  userType: this.user.userType,
-                  orders: this.user.orders,
-                  cart: updatedCart
-                }).subscribe();
-
-               
-          }
-        })
+              
+              
+              let userID = localStorage.getItem('loggedIn');
+              
+              this.http.put('http://localhost:62044/api/Carts/' + userID + '/' + id + '/plus', {
+                userID: userID,
+                cartItems: [{itemID: id}]
+              }).subscribe(data => console.log("putted"))
+              
          }
         }
         }
@@ -98,63 +68,25 @@ export class CartComponent implements OnInit {
       if(idToCompare !== null && idToCompare !== undefined) {
         if(parseInt(idToCompare) == id) {
           let field = (<HTMLInputElement>key.querySelector('.field'));
-         if(field !== null && field !== undefined) {
-          let price = key.querySelector('#price')?.textContent?.split(" ")[1];
-          if(price !== undefined) {
-           if(parseInt(field.value) > 0) {
-              let a = "" + (parseInt(field.value) - 1)
-              this.totalPrice -= parseInt(price);  // updating total price
-              field.value = a;
-             // localStorage.removeItem(JSON.parse(JSON.stringify(id)));
-             // localStorage.setItem(JSON.parse(JSON.stringify(id)), a);
-             this.http.get('http://localhost:62044/api/Users/' + this.user.userID).subscribe((data:any) => {
-             let oldCart = data.cart;
-             console.log(oldCart);
-             if(oldCart != "") {
-               let oldCartArray = oldCart.split("#");
-               let index = 0;
-               let itemId = "";
-               let newCount = "";
-               for(let i = 0; i < oldCartArray.length-1 && oldCartArray[i] !== ""; i++) {
-                 let oldCartItemArray = oldCartArray[i].split("$");
-                 if(Number(oldCartItemArray[0]) == id && Number(oldCartItemArray[1]) > 0) {
-
-                   oldCartItemArray[1] = Number(oldCartItemArray[1]) - 1;
-                   itemId = oldCartItemArray[0];
-                   newCount = oldCartItemArray[1];
-                   console.log(newCount)
-                   break;
-                 }
-                 index++;
-               }
-               let updatedCart = "";
-               if(Number(newCount) !== 0) {
-                oldCartArray[index] = itemId + "$" + newCount;
-                console.log(oldCartArray); 
-                updatedCart = oldCartArray.join("#");
-               } else {
-                 oldCartArray[index] = "".trim();    
-
+          if(field !== null && field !== undefined) {
+            let price = key.querySelector('#price')?.textContent?.split(" ")[1];
+              if(price !== undefined) {
+                if(parseInt(field.value) > 0) {
+                    let a = "" + (parseInt(field.value) - 1)
+                    this.totalPrice -= parseInt(price);  // updating total price
+                    field.value = a;
+                 
+                  
                 }
-           
+
+              let userID = localStorage.getItem('loggedIn');
               
-               this.http.put('http://localhost:62044/api/Users/' + this.user.userID, {
-                 userID: this.user.userID,
-                 firstName: this.user.firstName,
-                 lastName: this.user.lastName,
-                 dateOfBirth: this.user.dateOfBirth,
-                 email: this.user.email, 
-                 password: this.user.password,
-                 userType: this.user.userType,
-                 orders: this.user.orders,
-                 cart: updatedCart
-               }).subscribe();
+              this.http.put('http://localhost:62044/api/Carts/' + userID + '/' + id + '/minus', {
+                userID: userID,
+                cartItems: [{itemID: id}]
+              }).subscribe()
               
-         }
-        }) 
-           }
-          
-          } 
+              } 
           }
         }
       }
@@ -170,54 +102,38 @@ export class CartComponent implements OnInit {
     if(userLoggedIn === null) {
       this.errors.push("Must be logged in to confirm purchase");
     } else {
-      this.http.get('http://localhost:62044/api/Users/' + userLoggedIn).subscribe((data:any) => {
-        console.log(data);
-        let allOrders = data.orders;
-        document.querySelectorAll('.item-container').forEach((value, key) => {
-          console.log(value);
-          let item = (<HTMLElement>value.querySelector('#item')).textContent;
-          let price = (<HTMLElement>value.querySelector('#price')).textContent;
-          let count = (<HTMLInputElement>value.querySelector('#count')).value;
+      let previousOrders = this.http.get('http://localhost:62044/api/Orders/' + userLoggedIn + '/list');
+      for(let item of this.cartItems) {
+        let today = new Date();
+        let month = today.getMonth() + 1
+        let todayDate = today.getFullYear() + "-"   + month + "-" + today.getDate() + "T" + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
-          let today = new Date();
-          let month = today.getMonth() + 1
-          let todayDate = today.getFullYear() + "-" + month + "-" + today.getDate();
-      
-          orderedItems += [item, price, count, todayDate] + "#";
-      
+        console.log(todayDate);
+       
 
-          
-        });
-        allOrders += orderedItems;
-        console.log(allOrders);
-        this.http.put('http://localhost:62044/api/Users/' + userLoggedIn, { //updating orders of user
-          userID: userLoggedIn,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          dateOfBirth: data.dateOfBirth,
-          email: data.email,
-          password: data.password,
-          orders: allOrders,
-          cart: ""
-        }).subscribe((data) => {
-          window.location.href = 'http://localhost:4200/'; // redirecting to another page
-        });
-      })
-      
+        previousOrders.toPromise()
+          .then(res => {
+            this.http.put('http://localhost:62044/api/Orders/' + userLoggedIn, {
+              userID: userLoggedIn,
+              orderedItems: [{itemID: item.itemID, dateOfPurchase: todayDate, quantity: item.itemCount}]
+            }).toPromise().catch(err => console.log(err));
+          // .subscribe(data => console.log("response put"));
+          })
+          .catch(err => {
+            this.http.post('http://localhost:62044/api/Orders/', {
+              userID: userLoggedIn,
+              orderedItems: [{itemID: item.itemID, dateOfPuchase: todayDate, quantity: item.itemCount}]
+            }).subscribe(data => console.log("error post"));
+          })
 
-      //clearing database bought items 
-    
-      
-    
-    
-
-   
-   
-
+       
+      }
     }
 
 
   }
+
+ 
 
   
 
@@ -227,33 +143,28 @@ export class CartComponent implements OnInit {
     this.totalPrice = 0;
     
       let userID = localStorage.getItem("loggedIn");
-      this.http.get('http://localhost:62044/api/Users/' + userID).subscribe((data:any) => {
+      
+      let userCart =  this.http.get('http://localhost:62044/api/Carts/' + userID + '/list');
+      userCart.toPromise().then(res => {
+        userCart.subscribe((data:any) => {
+          for(let cartItem of data) {
+            this.notEmpty = true;
+            this.http.get('http://localhost:62044/api/Items/' + cartItem.itemID).subscribe((data:any) => {
+              let itemID = Number(data.itemID);
+              let itemName = data.itemName;
+              let categoryID = Number(data.categoryID);
+              let itemPrice = Number(data.itemPrice);
+              let itemImageURL = data.itemImageURL;
+              let itemCount = Number(cartItem.quantity);
 
-        this.user = data;
-        
+              this.totalPrice += itemPrice * itemCount;
 
-        let array = this.user.cart.split("#")
-       
+              this.cartItems.push(new CartItem(itemID, itemName, categoryID, itemPrice, itemImageURL, itemCount));
+            })
+          }
+        })
+      }).catch(err => {
 
-        for(let i = 0; i < array.length-1; i++) {
-          this.notEmpty = true;
-          let itemArray = array[i].split("$");
-          this.http.get('http://localhost:62044/api/Items/' + itemArray[0]).subscribe((data: any) => {
-       
-            this.countItem = Number(itemArray[1]);
-            let itemID = data.itemID;
-            let itemName = data.itemName;
-            let categoryID = data.categoryID;
-            let itemPrice = data.itemPrice;
-            let itemImageURL = data.itemImageURL;
-  
-            this.totalPrice += this.countItem * itemPrice;          
-            this.cartItems.push(new CartItem(itemID, itemName, categoryID, itemPrice, itemImageURL, parseInt(this.countItem)));
-  
-            console.log(this.cartItems);});
-          
-        }
-         
       })
   
   }
@@ -264,3 +175,4 @@ export class CartComponent implements OnInit {
 
     
     
+

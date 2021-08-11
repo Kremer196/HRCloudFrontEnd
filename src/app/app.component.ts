@@ -142,6 +142,8 @@ export class AppComponent implements OnInit {
             }
           }
         }
+
+        this.http.get('http://localhost:62044/api/Orders/1/list').subscribe((data:any) => console.log(data));
       })
   })
     this.locationUrl = window.location.pathname; //get current url

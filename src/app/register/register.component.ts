@@ -48,9 +48,7 @@ export class RegisterComponent implements OnInit {
             dateOfBirth: birthDate,
             email: email,
             password: password,
-            orders: "",
-            userType:UserType.User,
-            Cart: ""
+            userType:UserType.User
           }).subscribe(() => {
             window.location.href = 'http://localhost:4200/login'; //refirecting user to login
           });
