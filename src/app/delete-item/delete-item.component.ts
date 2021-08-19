@@ -19,7 +19,7 @@ export class DeleteItemComponent implements OnInit {
 
     for(let item of this.items) {
       if(item.itemName == itemName) {
-        itemID = item.itemID;
+        itemID = item.id;
         break;
       }
     }

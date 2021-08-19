@@ -19,7 +19,7 @@ export class UpdateCategoryComponent implements OnInit {
     let categoryID:any;
     for(let category of this.categories) {
       if(category.categoryName == categoryName) {
-        categoryID = category.categoryID;
+        categoryID = category.id;
         break;
       }
     }
@@ -27,7 +27,7 @@ export class UpdateCategoryComponent implements OnInit {
   
 
     this.http.put('http://localhost:62044/api/Categories/' + categoryID, {
-      categoryID: categoryID,
+      id: categoryID,
       categoryName: newCategoryName
     }).subscribe(data => window.location.href = 'http://localhost:4200/');
 

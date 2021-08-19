@@ -133,17 +133,19 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.http.get('http://localhost:62044/api/Categories').subscribe(data => {
       this.categories = data;
+      console.log(this.categories);
       this.http.get('http://localhost:62044/api/Items').subscribe((data:any) => {
         this.items = data;
+        console.log(this.items)
         for(let item of this.items) {
           for(let category of this.categories) {
-            if(item.categoryID == category.categoryID) {
+            if(item.categoryID == category.id) {
               item.categoryName = category.categoryName;
             }
           }
         }
 
-        this.http.get('http://localhost:62044/api/Orders/1/list').subscribe((data:any) => console.log(data));
+       
       })
   })
     this.locationUrl = window.location.pathname; //get current url

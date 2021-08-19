@@ -31,7 +31,7 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     let id = localStorage.getItem('loggedIn');
     this.http.get('http://localhost:62044/api/users/' + id).subscribe((data:any) => {
-      let userID = data.userID;
+      let userID = data.id;
       let firstName = data.firstName;
       let lastName = data.lastName;
       let birthDate = data.dateOfBirth.split("T")[0];

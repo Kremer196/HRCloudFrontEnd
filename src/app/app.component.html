@@ -64,7 +64,7 @@
           <div  *ngFor="let item of items | searchFilter:searchText | minFilter:minPrice | maxFilter:maxPrice | categoryFilter:category">
               <figure>
                 <img class="image" src="{{ item.itemImageURL }}">
-                <a class="caption" onclick="changeView()" [routerLink]="['/items', item.itemID]" routerLinkActive="active" ><figcaption > {{ item.itemName }} </figcaption></a>
+                <a class="caption" onclick="changeView()" [routerLink]="['/items', item.id]" routerLinkActive="active" ><figcaption > {{ item.itemName }} </figcaption></a>
               </figure>
           </div>
           

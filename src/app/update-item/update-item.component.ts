@@ -26,7 +26,7 @@ export class UpdateItemComponent implements OnInit {
     let itemID:any;
     for(let item of this.items) {
       if(item.itemName == itemName) {
-        itemID = item.itemID;
+        itemID = item.id;
         break;
       }
     }
@@ -35,13 +35,13 @@ export class UpdateItemComponent implements OnInit {
     
     for(let category of this.categories) {
       if(category.categoryName == categoryName) {
-        categoryId = category.categoryID;
+        categoryId = category.id;
         break;
       }
     }
 
     this.http.put('http://localhost:62044/api/Items/' + itemID, {
-      itemID: itemID,
+      id: itemID,
       itemName: newItemName,
       categoryID: categoryId,
       itemPrice: price,

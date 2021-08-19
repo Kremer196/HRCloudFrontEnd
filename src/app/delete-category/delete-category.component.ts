@@ -23,7 +23,7 @@ export class DeleteCategoryComponent implements OnInit {
 
     for(let category of this.categories) {
       if(category.categoryName == categoryName) {
-        categoryID = category.categoryID;
+        categoryID = category.id;
         break;
       }
     }

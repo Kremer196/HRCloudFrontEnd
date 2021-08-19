@@ -117,7 +117,7 @@ export class ItemComponent implements OnInit {
       subscribe((data:any) => {
         this.item = data; 
         for(let category of this.categories) {
-          if(category.categoryID == this.item.categoryID) {
+          if(category.id == this.item.categoryID) {
             this.item.categoryName = category.categoryName;
           }
         }

@@ -25,7 +25,7 @@ export class AddItemComponent implements OnInit {
     
     for(let category of this.categories) {
       if(category.categoryName == categoryName) {
-        categoryId = category.categoryID;
+        categoryId = category.id;
         break;
       }
     }

@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
         if(user.email == email) {           // checking if person with the emails match
           matchesEmail = true;
           if(user.password == password) {     // checking if the passwords match
-            localStorage.setItem('loggedIn', user.userID);
+            localStorage.setItem('loggedIn', user.id);
             localStorage.setItem('role', user.userType);
             window.location.href = 'http://localhost:4200/Items';
           } else {

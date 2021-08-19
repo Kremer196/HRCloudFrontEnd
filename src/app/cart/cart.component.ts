@@ -114,16 +114,16 @@ export class CartComponent implements OnInit {
         previousOrders.toPromise()
           .then(res => {
             this.http.put('http://localhost:62044/api/Orders/' + userLoggedIn, {
-              userID: userLoggedIn,
+              id: userLoggedIn,
               orderedItems: [{itemID: item.itemID, dateOfPurchase: todayDate, quantity: item.itemCount}]
-            }).toPromise().catch(err => console.log(err));
+            }).toPromise().catch(err => alert("Order succesfull!"));
           // .subscribe(data => console.log("response put"));
           })
           .catch(err => {
             this.http.post('http://localhost:62044/api/Orders/', {
-              userID: userLoggedIn,
-              orderedItems: [{itemID: item.itemID, dateOfPuchase: todayDate, quantity: item.itemCount}]
-            }).subscribe(data => console.log("error post"));
+              id: userLoggedIn,
+              orderedItems: [{itemID: item.itemID, dateOfPurchase: todayDate, quantity: item.itemCount}]
+            }).subscribe(data => alert("Order succesfull!"));
           })
 
        
@@ -150,7 +150,7 @@ export class CartComponent implements OnInit {
           for(let cartItem of data) {
             this.notEmpty = true;
             this.http.get('http://localhost:62044/api/Items/' + cartItem.itemID).subscribe((data:any) => {
-              let itemID = Number(data.itemID);
+              let itemID = Number(data.id);
               let itemName = data.itemName;
               let categoryID = Number(data.categoryID);
               let itemPrice = Number(data.itemPrice);
