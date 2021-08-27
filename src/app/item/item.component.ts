@@ -19,7 +19,7 @@ export class ItemComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   
-  // adding itemId to localStorage
+  
   addToCart(event:any) {
   
   event.preventDefault();
@@ -27,78 +27,21 @@ export class ItemComponent implements OnInit {
   const itemToAdd = document.getElementById('id')?.textContent?.trim();
   if(itemToAdd !== null && itemToAdd !== undefined) {     
     if(loggedIn !== null) {
-      let empty = false;
-      let cart = this.http.get('http://localhost:62044/api/Carts/' + loggedIn + '/list');
-      cart.toPromise().then(res => {
-        cart.subscribe((data:any) => {
-          if(data.length == 0) {
-            empty = true;
-          }
-          let oldItem = false;
-          let userCart = data;
-          for(let item of userCart) {
-            if(item.itemID == Number(itemToAdd)) {
-              oldItem = true;
-              this.http.put('http://localhost:62044/api/Carts/' + loggedIn + '/' + itemToAdd + '/plus', {
-                userID: loggedIn,
-                cartItems: [{itemID: Number(itemToAdd)}]
-              }).subscribe(data => console.log("putted"));
-              break;
-            }
-          }
+      let itemPost = this.http.post('http://localhost:62044/api/Carts', {
+        id: loggedIn,
+        itemID: itemToAdd,
+        quantity: 1
+      });
 
-        
-          let postCartItem = this.http.post('http://localhost:62044/api/CartItems', {
+      itemPost.toPromise()
+        .then(res => itemPost.subscribe(data => console.log("posted")))
+        .catch(err => {
+          this.http.put('http://localhost:62044/api/Carts/' + loggedIn + '/' + itemToAdd + '/plus', {
+            id: loggedIn,
             itemID: itemToAdd
-          });
-          
-          postCartItem.toPromise()
-            .then(res => {
-              postCartItem.subscribe(data => console.log("posted cartitem"));
-            })
-            .catch(err => {
-              console.log("caught");
-            });
-         
-        
-         
-         if (!oldItem) {
-            console.log("new");
-            let putCartItem =  this.http.put('http://localhost:62044/api/Carts/' + loggedIn, {
-              userID: loggedIn,
-              cartItems: [{itemID: Number(itemToAdd), quantity: 1}]
-            });
-            putCartItem.toPromise()
-              .then(res => {
-                putCartItem.subscribe(data => console.log("putted new"));
-              })
-              .catch(err => {
-                this.http.delete('http://localhost:62044/api/CartItems/' + itemToAdd).subscribe(data => {
-                  putCartItem.subscribe(data => console.log("putted after deletion"));
-                })
-              })
-            
-          }
-        
-        })
-      }).catch(err => {
-        let postCartItem = this.http.post('http://localhost:62044/api/CartItems', {
-            itemID: itemToAdd
-          });
-
-          postCartItem.toPromise()
-          .then(res => {
-            postCartItem.subscribe(data => console.log("posted cartitem"));
-          })
-          .catch(err => {
-
-          });
-        
-        this.http.post('http://localhost:62044/api/Carts', {
-          userID: loggedIn 
-
-        }).subscribe(data => console.log("posted"));
-      })
+          }).subscribe(data => console.log("putted"))
+        });
+      
     
   }  else {
     window.location.href = 'http://localhost:4200/login';

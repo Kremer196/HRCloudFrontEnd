@@ -126,6 +126,9 @@ export class CartComponent implements OnInit {
             }).subscribe(data => alert("Order succesfull!"));
           })
 
+        for(let item of this.cartItems) {
+          this.http.delete('http://localhost:62044/api/Carts/' + userLoggedIn + '/' + item.itemID).subscribe();
+        }
        
       }
     }
@@ -144,7 +147,7 @@ export class CartComponent implements OnInit {
     
       let userID = localStorage.getItem("loggedIn");
       
-      let userCart =  this.http.get('http://localhost:62044/api/Carts/' + userID + '/list');
+      let userCart =  this.http.get('http://localhost:62044/api/Carts/' + userID);
       userCart.toPromise().then(res => {
         userCart.subscribe((data:any) => {
           for(let cartItem of data) {
